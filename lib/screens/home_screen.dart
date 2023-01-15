@@ -10,11 +10,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int totalSeconds = 1500;
+  static const initialTimerSeconds = 1500; // 25 minutes
+  int totalSeconds = initialTimerSeconds;
+  int totalPomodoros = 0;
   bool isRunning = false;
   late Timer timer;
 
   void onTick(Timer timer) {
+    if (totalSeconds == 0) {
+      setState(() {
+        totalSeconds = initialTimerSeconds;
+        totalPomodoros++;
+        isRunning = false;
+      });
+      timer.cancel();
+      return;
+    }
+
     setState(() {
       totalSeconds--;
     });
@@ -39,6 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  String getFormattedTime() {
+    String minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    String seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             alignment: Alignment.bottomCenter,
             child: Text(
-              "$totalSeconds",
+              getFormattedTime(),
               style: TextStyle(
                 color: Theme.of(context).cardColor,
                 fontSize: 89,
@@ -93,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        "0",
+                        "$totalPomodoros",
                         style: TextStyle(
                           fontSize: 58,
                           fontWeight: FontWeight.w600,
