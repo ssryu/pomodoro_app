@@ -22,10 +22,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onStartPressed() {
     timer = Timer.periodic(
-        const Duration(
-          seconds: 1,
-        ),
-        onTick);
+      const Duration(
+        seconds: 1,
+      ),
+      onTick,
+    );
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void onPausePressed() {
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+    });
   }
 
   @override
@@ -51,8 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
           flex: 3,
           child: Center(
             child: IconButton(
-              onPressed: onStartPressed,
-              icon: const Icon(Icons.play_circle_outline),
+              onPressed: isRunning ? onPausePressed : onStartPressed,
+              icon: Icon(isRunning
+                  ? Icons.pause_circle_outline
+                  : Icons.play_circle_outline),
               iconSize: 120,
               color: Theme.of(context).cardColor,
             ),
