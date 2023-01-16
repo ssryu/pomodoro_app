@@ -51,6 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onResetPressed() {
+    timer.cancel();
+    setState(() {
+      totalSeconds = 1500;
+      isRunning = false;
+    });
+  }
+
   String getFormattedTime() {
     String minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
     String seconds = (totalSeconds % 60).toString().padLeft(2, '0');
@@ -79,13 +87,24 @@ class _HomeScreenState extends State<HomeScreen> {
         Flexible(
           flex: 3,
           child: Center(
-            child: IconButton(
-              onPressed: isRunning ? onPausePressed : onStartPressed,
-              icon: Icon(isRunning
-                  ? Icons.pause_circle_outline
-                  : Icons.play_circle_outline),
-              iconSize: 120,
-              color: Theme.of(context).cardColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: isRunning ? onPausePressed : onStartPressed,
+                  icon: Icon(isRunning
+                      ? Icons.pause_circle_outline
+                      : Icons.play_circle_outline),
+                  iconSize: 120,
+                  color: Theme.of(context).cardColor,
+                ),
+                IconButton(
+                  onPressed: onResetPressed,
+                  icon: const Icon(Icons.restore_outlined),
+                  iconSize: 120,
+                  color: Theme.of(context).cardColor,
+                ),
+              ],
             ),
           ),
         ),
